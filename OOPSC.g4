@@ -21,6 +21,8 @@ statement    : 'READ' memberaccess ';'
                | 'WRITE' expression ';'
                | 'IF' relation 
                  'THEN' statements 
+                 ('ELSEIF' statements)*
+                 ('ELSE' statements)?
                  'END IF'
                | 'WHILE' relation 
                  'DO' statements 
@@ -28,7 +30,9 @@ statement    : 'READ' memberaccess ';'
                | memberaccess ':=' expression ';'
                ;	
 
-relation     : expression ( '=' | '#' | '<' | '>' | '<=' | '>=' ) expression;
+relation     : 'NOT' relation {('AND' | 'OR') relation}
+               | expression ( '=' | '#' | '<' | '>' | '<=' | '>=' ) expression
+               ;
 
 expression   : term { ( '+' | '-' ) term };
 
