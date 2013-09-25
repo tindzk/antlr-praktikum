@@ -21,6 +21,7 @@ methodbody   : ( vardecl ';' )?
 
 statements   :  statement*;
 
+// TODO WRITELN is interpreted as WRITE + identifier
 statement    : 'READ' memberaccess ';'
                | 'WRITE' evaluableExpression ';'
                | 'RETURN' evaluableExpression? ';'
