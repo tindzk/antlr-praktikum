@@ -7,7 +7,7 @@ classdecl    : 'CLASS' identifier 'IS'
                  'END CLASS';
 
 memberdecl   : vardecl ';'
-               | 'METHOD' identifier 'IS' methodbody;
+               | 'METHOD' identifier (':' identifier)? 'IS' methodbody;
 
 vardecl      : identifier ( ',' identifier )* ':' identifier;
 
@@ -21,6 +21,7 @@ statements   :  statement* ;
                  
 statement    : 'READ' memberaccess ';'
                | 'WRITE' expression ';'
+               | 'RETURN' expression? ';'
                | 'IF' relation
                  'THEN' statements
                  ('ELSEIF' statements)*
@@ -66,3 +67,10 @@ LETTER       : [a-zA-Z];
 DIGIT        : [0-9];
 
 character    : ''' (\n | \\ ) ''';
+
+WS  :   [ \t\n]+ -> skip ; // toss out whitespaces and newlines
+
+// see http://media.pragprog.com/titles/tpantlr2/code/tour/Java.g4
+LINE_COMMENT
+    : '|' ~[\r\n]* '\r'? '\n' -> channel(HIDDEN)
+    ;
