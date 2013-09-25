@@ -21,7 +21,7 @@ statements   :  statement* ;
                  
 statement    : 'READ' memberaccess ';'
                | 'WRITE' expression ';'
-               | 'IF' relation 
+               | 'IF' relation
                  'THEN' statements
                  ('ELSEIF' statements)*
                  ('ELSE' statements)?
@@ -32,7 +32,9 @@ statement    : 'READ' memberaccess ';'
                | memberaccess ':=' expression ';'
                ;	
 
-relation     : expression ( ( '=' | '#' | '<' | '>' | '<=' | '>=' ) expression )?;
+relation     : expression ( ( '=' | '#' | '<' | '>' | '<=' | '>=' ) expression )?
+               |  'NOT' relation
+               | relation ( 'AND' | 'OR' ) relation;
 
 expression   : term ( ( '+' | '-' ) term )?;
 
