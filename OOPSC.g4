@@ -22,7 +22,6 @@ methodbody   : ( vardecl ';' )?
 statements   :  statement*;
 
 statement    : 'READ' memberaccess ';'
-               | 'WRITELN' evaluableExpression ';'
                | 'WRITE' evaluableExpression ';'
                | 'RETURN' evaluableExpression? ';'
                | 'IF' relation
