@@ -32,9 +32,11 @@ statement    : 'READ' memberaccess ';'
                | memberaccess ':=' expression ';'
                ;	
 
-relation     : expression ( ( '=' | '#' | '<' | '>' | '<=' | '>=' ) expression )?
-               |  'NOT' relation
-               | relation ( 'AND' | 'OR' ) relation;
+
+relation     :  'NOT' relation
+               |  expression ( ( '=' | '#' | '<' | '>' | '<=' | '>=' ) expression )?
+               |  relation 'AND' relation
+               |  relation 'OR' relation;
 
 expression   : term ( ( '+' | '-' ) term )?;
 
