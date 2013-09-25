@@ -43,7 +43,7 @@ relation     :  'NOT' relation
                |  relation 'OR' relation;
 
 evaluableExpression : '(' evaluableExpression ')'
-                    | memberaccess '(' evaluableExpression ')'
+                    | memberaccess '(' evaluableExpression (',' evaluableExpression)* ')'
                     | expression
                     ;
 
