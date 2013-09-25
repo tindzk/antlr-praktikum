@@ -1,6 +1,15 @@
 *.class
 
-# Package Files #
+# package files #
 *.jar
 *.war
 *.ear
+
+# generated files
+OOPSC.tokens                                                                                                                                                                                                                               
+OOPSCBaseListener.java                                                                                                                                                                                                                     
+OOPSCLexer.java                                                                                                                                                                                                                            
+OOPSCLexer.tokens                                                                                                                                                                                                                          
+OOPSCListener.java                                                                                                                                                                                                                         
+OOPSCParser.java
+

@@ -3,24 +3,28 @@ grammar OOPSC;
 program      : classdecl;
 
 classdecl    : 'CLASS' identifier 'IS'
-                 { memberdecl } 
+                 memberdecl* 
                  'END CLASS';
 
 memberdecl   : vardecl ';'
                | 'METHOD' identifier 'IS' methodbody;
 
-vardecl      : identifier { ',' identifier } ':' identifier;
+vardecl      : identifier ( ',' identifier )* ':' identifier;
 
-methodbody   : { vardecl ';' }
+methodbody   : ( vardecl ';' )?
                  'BEGIN' statements
                  'END METHOD';
 
-statements   : { statement };
+statements   :  statement* ;
 
+
+                 
 statement    : 'READ' memberaccess ';'
                | 'WRITE' expression ';'
                | 'IF' relation 
-                 'THEN' statements 
+                 'THEN' statements
+                 ('ELSEIF' statements)*
+                 ('ELSE' statements)?
                  'END IF'
                | 'WHILE' relation 
                  'DO' statements 
@@ -28,17 +32,17 @@ statement    : 'READ' memberaccess ';'
                | memberaccess ':=' expression ';'
                ;	
 
-relation     : expression ( '=' | '#' | '<' | '>' | '<=' | '>=' ) expression;
+relation     : expression ( ( '=' | '#' | '<' | '>' | '<=' | '>=' ) expression )?;
 
-expression   : term { ( '+' | '-' ) term };
+expression   : term ( ( '+' | '-' ) term )?;
 
-term         : factor { ( '*' | '/' | 'MOD' ) factor };
+term         : factor ( ( '*' | '/' | 'MOD' ) factor )*;
 
 factor       : '-' factor
                | memberaccess
                ;
 
-memberaccess : literal { '.' varorcall };
+memberaccess : literal ( '.' varorcall )*;
 
 literal      : number
                | character
@@ -51,11 +55,11 @@ literal      : number
   
 varorcall    : identifier;
 
-identifier   : LETTER { LETTER | DIGIT };
+identifier   : LETTER ( LETTER | DIGIT )*;
 
-number       : DIGIT { DIGIT };
+number       : DIGIT+;
 
-LETTER       : [A-Z] | [a-z];
+LETTER       : [a-zA-Z];
 
 DIGIT        : [0-9];
 
