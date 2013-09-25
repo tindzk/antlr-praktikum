@@ -8,7 +8,7 @@ classdecl    : 'CLASS' identifier 'IS'
 
 memberdecl   : vardecl ';'
              | 'METHOD' identifier
-               ('(' vardecl ')')?
+               ('(' vardecl (';' vardecl)* ')')?
                (':' identifier)?
                'IS' methodbody
              ;
