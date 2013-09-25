@@ -19,7 +19,7 @@ methodbody   : ( vardecl ';' )?
                  'BEGIN' statements
                  'END METHOD';
 
-statements   :  statement* ;
+statements   :  statement*;
 
 statement    : 'READ' memberaccess ';'
                | 'WRITELN' evaluableExpression ';'
@@ -42,8 +42,7 @@ relation     :  'NOT' relation
                |  relation 'AND' relation
                |  relation 'OR' relation;
 
-evaluableExpression :
-                    | '(' evaluableExpression ')'
+evaluableExpression : '(' evaluableExpression ')'
                     | memberaccess '(' evaluableExpression ')'
                     | expression
                     ;
