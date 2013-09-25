@@ -6,10 +6,10 @@
 *.ear
 
 # generated files
-OOPSC.tokens                                                                                                                                                                                                                               
-OOPSCBaseListener.java                                                                                                                                                                                                                     
-OOPSCLexer.java                                                                                                                                                                                                                            
-OOPSCLexer.tokens                                                                                                                                                                                                                          
-OOPSCListener.java                                                                                                                                                                                                                         
+OOPSC.tokens
+OOPSCBaseListener.java
+OOPSCLexer.java
+OOPSCLexer.tokens
+OOPSCListener.java
 OOPSCParser.java
 
