@@ -7,7 +7,11 @@ classdecl    : 'CLASS' identifier 'IS'
                  'END CLASS';
 
 memberdecl   : vardecl ';'
-               | 'METHOD' identifier (':' identifier)? 'IS' methodbody;
+             | 'METHOD' identifier
+               ('(' vardecl ')')?
+               (':' identifier)?
+               'IS' methodbody
+             ;
 
 vardecl      : identifier ( ',' identifier )* ':' identifier;
 
@@ -17,11 +21,10 @@ methodbody   : ( vardecl ';' )?
 
 statements   :  statement* ;
 
-
-                 
 statement    : 'READ' memberaccess ';'
-               | 'WRITE' expression ';'
-               | 'RETURN' expression? ';'
+               | 'WRITELN' evaluableExpression ';'
+               | 'WRITE' evaluableExpression ';'
+               | 'RETURN' evaluableExpression? ';'
                | 'IF' relation
                  'THEN' statements
                  ('ELSEIF' statements)*
@@ -30,18 +33,28 @@ statement    : 'READ' memberaccess ';'
                | 'WHILE' relation 
                  'DO' statements 
                  'END WHILE'
-               | memberaccess ':=' expression ';'
+               | memberaccess ':=' evaluableExpression ';'
+               | memberaccess '(' evaluableExpression ');'
                ;	
-
 
 relation     :  'NOT' relation
                |  expression ( ( '=' | '#' | '<' | '>' | '<=' | '>=' ) expression )?
                |  relation 'AND' relation
                |  relation 'OR' relation;
 
-expression   : term ( ( '+' | '-' ) term )?;
+evaluableExpression :
+                    | '(' evaluableExpression ')'
+                    | memberaccess '(' evaluableExpression ')'
+                    | expression
+                    ;
 
-term         : factor ( ( '*' | '/' | 'MOD' ) factor )*;
+expression   : term ( ( '+' | '-' ) term )*
+             | '(' expression ')'
+             ;
+
+term         : factor ( ( '*' | '/' | 'MOD' ) factor )*
+             | StringLiteral
+             ;
 
 factor       : '-' factor
                | memberaccess
@@ -57,6 +70,16 @@ literal      : number
                | '(' expression ')'
                | varorcall
                ;
+
+// see http://media.pragprog.com/titles/tpantlr2/code/tour/Java.g4
+StringLiteral
+    :  '\'' ( EscapeSequence | ~('\\'|'\'') )* '\''
+    ;
+
+fragment
+EscapeSequence
+    :   '\\' ('b'|'t'|'n'|'f'|'r'|'\"'|'\''|'\\')
+    ;
   
 varorcall    : identifier;
 
