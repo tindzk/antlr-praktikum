@@ -33,7 +33,7 @@ statement    : 'READ' memberaccess ';'
                  'DO' statements 
                  'END WHILE'
                | memberaccess ':=' evaluableExpression ';'
-               | memberaccess '(' evaluableExpression ');'
+               | evaluableExpression ';'
                ;	
 
 relation     :  'NOT' relation
