@@ -42,10 +42,12 @@ relation     :  'NOT' relation
                |  relation 'AND' relation
                |  relation 'OR' relation;
 
-expression   : memberaccess '(' expression (',' expression)* ')'
+expression   : memberaccess '(' expressionList? ')'
              | term ( ( '+' | '-' ) term )*
              | '(' expression ')'
              ;
+
+expressionList : expression (',' expression)*;
 
 term         : factor ( ( '*' | '/' | 'MOD' ) factor )*
              | StringLiteral
