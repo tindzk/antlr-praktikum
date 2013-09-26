@@ -62,7 +62,7 @@ factor       : '-' factor
 memberaccess : literal ( '.' varorcall )*;
 
 literal      : number
-               | character
+               | CHARACTER
                | 'NULL'
                | 'SELF'
                | 'NEW' identifier
@@ -90,7 +90,7 @@ LETTER       : [a-zA-Z];
 
 DIGIT        : [0-9];
 
-character    : ''' (\n | \\ ) ''';
+CHARACTER    : ''' (\n | \\ ) ''';
 
 WS  :   [ \t\n]+ -> skip ; // toss out whitespaces and newlines
 
