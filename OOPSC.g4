@@ -23,7 +23,7 @@ variableDeclaration
   ;
 
 methodBody
-  : (variableDeclaration ';')?
+  : (variableDeclaration ';')*
     'BEGIN' statements
     'END METHOD'
   ;
