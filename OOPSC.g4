@@ -69,7 +69,7 @@ expression
   | expression '(' expressionList? ')'
   | expression ('*' | '/' | 'MOD') expression
   | expression ('+' | '-') expression
-  | expression ('<' '=' | '>' '=' | '>' | '<') expression
+  | expression ('<=' | '>=' | '>' | '<') expression
   | expression 'AND' expression
   | expression 'OR' expression
   | expression
