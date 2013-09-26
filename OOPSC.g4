@@ -1,98 +1,122 @@
+/* See also http://media.pragprog.com/titles/tpantlr2/code/tour/Java.g4 */
 grammar OOPSC;
 
-program      : classdecl;
+program
+  : classDeclaration;
 
-classdecl    : 'CLASS' identifier 'IS'
-                 memberdecl* 
-                 'END CLASS';
+classDeclaration
+  : 'CLASS' Identifier 'IS'
+    memberDeclaration*
+    'END CLASS'
+  ;
 
-memberdecl   : vardecl ';'
-             | 'METHOD' identifier
-               ('(' vardecl (';' vardecl)* ')')?
-               (':' identifier)?
-               'IS' methodbody
-             ;
+memberDeclaration
+  : variableDeclaration ';'
+  | 'METHOD' Identifier
+    ('(' variableDeclaration (';' variableDeclaration)* ')')?
+    (':' Identifier)?
+    'IS' methodBody
+  ;
 
-vardecl      : identifier ( ',' identifier )* ':' identifier;
+variableDeclaration
+  : Identifier (',' Identifier)* ':' Identifier
+  ;
 
-methodbody   : ( vardecl ';' )?
-                 'BEGIN' statements
-                 'END METHOD';
+methodBody
+  : (variableDeclaration ';')?
+    'BEGIN' statements
+    'END METHOD'
+  ;
 
-statements   :  statement*;
+statements
+  : statement*
+  ;
 
-// TODO WRITELN is interpreted as WRITE + identifier
-statement    : 'READ' memberaccess ';'
-               | 'WRITE' expression ';'
-               | 'RETURN' expression? ';'
-               | 'IF' relation
-                 'THEN' statements
-                 ('ELSEIF' statements)*
-                 ('ELSE' statements)?
-                 'END IF'
-               | 'WHILE' relation 
-                 'DO' statements 
-                 'END WHILE'
-               | memberaccess ':=' expression ';'
-               | expression ';'
-               ;	
+statement
+  : 'READ' expression ';'
+  | 'WRITE' expression ';'
+  | 'RETURN' expression? ';'
+  | 'IF' expression
+    'THEN' statements
+    ('ELSEIF' statements)*
+    ('ELSE' statements)?
+    'END IF'
+  | 'WHILE' expression
+    'DO' statements
+    'END WHILE'
+  | expression ':=' expression ';'
+  | expression ';'
+  ;
 
-relation     :  'NOT' relation
-               |  expression ( ( '=' | '#' | '<' | '>' | '<=' | '>=' ) expression )?
-               |  relation 'AND' relation
-               |  relation 'OR' relation;
+primaryExpression
+  : '(' expression ')'
+  | 'SELF'
+  | literal
+  | Identifier
+  ;
 
-expression   : memberaccess '(' expressionList? ')'
-             | term ( ( '+' | '-' ) term )*
-             | '(' expression ')'
-             ;
+expression
+  : primaryExpression
+  | expression '.' Identifier
+  | 'NOT' expression
+  | 'NEW' Identifier
+  | expression '(' expressionList? ')'
+  | expression ('*' | '/' | 'MOD') expression
+  | expression ('+' | '-') expression
+  | expression ('<' '=' | '>' '=' | '>' | '<') expression
+  | expression 'AND' expression
+  | expression 'OR' expression
+  | expression
+    ('='<assoc=right>
+    |'#'<assoc=right>
+    )
+    expression
+  ;
 
-expressionList : expression (',' expression)*;
+expressionList
+  : expression (',' expression)*
+  ;
 
-term         : factor ( ( '*' | '/' | 'MOD' ) factor )*
-             | StringLiteral
-             ;
+literal
+  : IntegerLiteral
+  | CharacterLiteral
+  | 'NULL'
+  ;
 
-factor       : '-' factor
-               | memberaccess
-               ;
+Identifier
+  : LETTER (LETTER | DIGIT)*
+  ;
 
-memberaccess : literal ( '.' varorcall )*;
+IntegerLiteral
+  : DIGIT+
+  ;
 
-literal      : number
-               | character
-               | 'NULL'
-               | 'SELF'
-               | 'NEW' identifier
-               | '(' expression ')'
-               | varorcall
-               ;
+DIGIT
+  : [0-9]
+  ;
 
-// see http://media.pragprog.com/titles/tpantlr2/code/tour/Java.g4
+LETTER
+  : [a-zA-Z]
+  ;
+
+CharacterLiteral
+  : '\'' (EscapeSequence | ~('\''|'\\')) '\''
+  ;
+
 StringLiteral
-    :  '\'' ( EscapeSequence | ~('\\'|'\'') )* '\''
-    ;
+  : '\'' (EscapeSequence | ~('\\'|'\''))* '\''
+  ;
 
 fragment
 EscapeSequence
-    :   '\\' ('b'|'t'|'n'|'f'|'r'|'\"'|'\''|'\\')
-    ;
-  
-varorcall    : identifier;
+  : '\\' ('b'|'t'|'n'|'f'|'r'|'\"'|'\''|'\\')
+  ;
 
-identifier   : LETTER ( LETTER | DIGIT )*;
-
-number       : DIGIT+;
-
-LETTER       : [a-zA-Z];
-
-DIGIT        : [0-9];
-
-character    : ''' (\n | \\ ) ''';
-
-WS  :   [ \t\n]+ -> skip ; // toss out whitespaces and newlines
-
-// see http://media.pragprog.com/titles/tpantlr2/code/tour/Java.g4
 LINE_COMMENT
-    : '|' ~[\r\n]* '\r'? '\n' -> channel(HIDDEN)
-    ;
+  : '|' ~[\r\n]* '\r'? '\n' -> channel(HIDDEN)
+  ;
+
+/* Toss out whitespaces and newlines. */
+WS
+  : [ \t\n]+ -> skip
+  ;
