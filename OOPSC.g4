@@ -5,7 +5,9 @@ program
   : classDeclaration;
 
 classDeclaration
-  : 'CLASS' Identifier 'IS'
+  : 'CLASS' Identifier
+    ('EXTENDS' Identifier)?
+    'IS'
     memberDeclaration*
     'END CLASS'
   ;
