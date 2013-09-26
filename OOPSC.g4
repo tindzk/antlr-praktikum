@@ -23,8 +23,8 @@ statements   :  statement*;
 
 // TODO WRITELN is interpreted as WRITE + identifier
 statement    : 'READ' memberaccess ';'
-               | 'WRITE' evaluableExpression ';'
-               | 'RETURN' evaluableExpression? ';'
+               | 'WRITE' expression ';'
+               | 'RETURN' expression? ';'
                | 'IF' relation
                  'THEN' statements
                  ('ELSEIF' statements)*
@@ -33,8 +33,8 @@ statement    : 'READ' memberaccess ';'
                | 'WHILE' relation 
                  'DO' statements 
                  'END WHILE'
-               | memberaccess ':=' evaluableExpression ';'
-               | evaluableExpression ';'
+               | memberaccess ':=' expression ';'
+               | expression ';'
                ;	
 
 relation     :  'NOT' relation
@@ -42,12 +42,8 @@ relation     :  'NOT' relation
                |  relation 'AND' relation
                |  relation 'OR' relation;
 
-evaluableExpression : '(' evaluableExpression ')'
-                    | memberaccess '(' evaluableExpression (',' evaluableExpression)* ')'
-                    | expression
-                    ;
-
-expression   : term ( ( '+' | '-' ) term )*
+expression   : memberaccess '(' expression (',' expression)* ')'
+             | term ( ( '+' | '-' ) term )*
              | '(' expression ')'
              ;
 
