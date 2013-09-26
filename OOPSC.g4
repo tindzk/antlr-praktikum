@@ -38,10 +38,14 @@ statement
   : 'READ' expression ';'
   | 'WRITE' expression ';'
   | 'RETURN' expression? ';'
+  | 'THROW' expression ';'
   | 'IF' expression 'THEN' statements
     ('ELSEIF' expression 'THEN' statements)*
     ('ELSE' statements)?
     'END IF'
+  | 'TRY' statements
+    ('CATCH' literal 'DO' statements)+
+    'END TRY'
   | 'WHILE' expression
     'DO' statements
     'END WHILE'
@@ -82,6 +86,7 @@ expressionList
 literal
   : IntegerLiteral
   | CharacterLiteral
+  | StringLiteral
   | 'NULL'
   ;
 
