@@ -59,6 +59,7 @@ primaryExpression
 expression
   : primaryExpression
   | expression '.' Identifier
+  | '-' expression
   | 'NOT' expression
   | 'NEW' Identifier
   | expression '(' expressionList? ')'
@@ -101,7 +102,7 @@ LETTER
   ;
 
 CharacterLiteral
-  : '\'' (EscapeSequence | ~('\''|'\\')) '\''
+  : '\'' (EscapeSequence | .?) '\''
   ;
 
 StringLiteral
@@ -111,6 +112,11 @@ StringLiteral
 fragment
 EscapeSequence
   : '\\' ('b'|'t'|'n'|'f'|'r'|'\"'|'\''|'\\')
+  ;
+
+/* Match anything between { and }. */
+COMMENT
+  : '{' .*? '}' -> channel(HIDDEN)
   ;
 
 LINE_COMMENT
