@@ -36,9 +36,8 @@ statement
   : 'READ' expression ';'
   | 'WRITE' expression ';'
   | 'RETURN' expression? ';'
-  | 'IF' expression
-    'THEN' statements
-    ('ELSEIF' statements)*
+  | 'IF' expression 'THEN' statements
+    ('ELSEIF' expression 'THEN' statements)*
     ('ELSE' statements)?
     'END IF'
   | 'WHILE' expression
