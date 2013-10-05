@@ -1,27 +1,47 @@
 /* See also http://media.pragprog.com/titles/tpantlr2/code/tour/Java.g4 */
-grammar OOPSC;
+grammar Grammar;
+
+AND: 'AND';
+OR:  'OR';
+MOD: 'MOD';
+MUL: '*';
+DIV: '/';
+ADD: '+';
+SUB: '-';
+LEQ: '<=';
+GEQ: '>=';
+LT:  '<';
+GT:  '>';
+EQ:  '=';
+NEQ: '#';
+TRUE: 'TRUE';
+FALSE: 'FALSE';
 
 program
-  : classDeclaration;
+  : classDeclaration*;
 
 classDeclaration
-  : 'CLASS' Identifier
-    ('EXTENDS' Identifier)?
+  : 'CLASS' name=Identifier
+    ('EXTENDS' extendsClass=Identifier)?
     'IS'
     memberDeclaration*
     'END CLASS'
   ;
 
 memberDeclaration
-  : variableDeclaration ';'
-  | 'METHOD' Identifier
-    ('(' variableDeclaration (';' variableDeclaration)* ')')?
-    (':' Identifier)?
-    'IS' methodBody
+  : memberVariableDeclaration ';'
+  | methodDeclaration
   ;
 
-variableDeclaration
-  : Identifier (',' Identifier)* ':' Identifier
+memberVariableDeclaration
+  : variableDeclaration
+  ;
+
+methodDeclaration
+  : 'METHOD' name=Identifier
+    ('(' variableDeclaration (';' variableDeclaration)* ')')?
+    (':' type)?
+    'IS' methodBody
   ;
 
 methodBody
@@ -30,64 +50,68 @@ methodBody
     'END METHOD'
   ;
 
+variableDeclaration
+  : Identifier (',' Identifier)* ':' type
+  ;
+
+type
+  : Identifier
+  ;
+
 statements
   : statement*
   ;
 
 statement
-  : 'READ' expression ';'
-  | 'WRITE' expression ';'
-  | 'RETURN' expression? ';'
-  | 'THROW' expression ';'
-  | 'IF' expression 'THEN' statements
+  : 'IF' expression 'THEN' statements
     ('ELSEIF' expression 'THEN' statements)*
     ('ELSE' statements)?
-    'END IF'
+    'END IF'                       # ifStatement
   | 'TRY' statements
     ('CATCH' literal 'DO' statements)+
-    'END TRY'
+    'END TRY'                      # tryStatement
   | 'WHILE' expression
     'DO' statements
-    'END WHILE'
-  | expression ':=' expression ';'
-  | expression ';'
-  ;
-
-primaryExpression
-  : '(' expression ')'
-  | 'SELF'
-  | literal
-  | Identifier
+    'END WHILE'                    # whileStatement
+  | 'READ' expression ';'          # readStatement
+  | 'WRITE' expression ';'         # writeStatement
+  | 'RETURN' expression? ';'       # returnStatement
+  | 'THROW' expression ';'         # throwStatement
+  | expression ':=' expression ';' # assignStatement
+  | expression ';'                 # expressionStatement
   ;
 
 expression
-  : primaryExpression
-  | expression '.' Identifier
-  | '-' expression
-  | 'NOT' expression
-  | 'NEW' Identifier
-  | expression '(' expressionList? ')'
-  | expression ('*' | '/' | 'MOD') expression
-  | expression ('+' | '-') expression
-  | expression ('<=' | '>=' | '>' | '<') expression
-  | expression 'AND' expression
-  | expression 'OR' expression
+  : '(' expression ')'                              # bracketsExpression
+  | expression '.' call                             # callExpression
+  | call                                            # call2Expression
+  | expression '.' Identifier                       # memberAccessExpression
+  | Identifier                                      # memberAccess2Expression
+  | literal                                         # literalExpression
+  | '-' expression                                  # minusExpression
+  | 'NOT' expression                                # negateExpression
+  | 'NEW' Identifier                                # instantiateExpression
+  | expression op=(MUL | DIV | MOD) expression      # mulDivModExpression
+  | expression op=(ADD | SUB) expression            # addSubExpression
+  | expression op=(LEQ | GEQ | LT | GT) expression  # compareExpression
   | expression
-    ('='<assoc=right>
-    |'#'<assoc=right>
-    )
-    expression
+    (EQ<assoc=right> | NEQ<assoc=right>)
+    expression                                      # equalityExpression
+  | expression AND expression                       # conjunctionExpression
+  | expression OR expression                        # disjunctionExpression
   ;
 
-expressionList
-  : expression (',' expression)*
+call
+  : Identifier '(' (expression (',' expression)*)? ')'
   ;
 
 literal
-  : IntegerLiteral
-  | CharacterLiteral
-  | StringLiteral
-  | 'NULL'
+  : IntegerLiteral       # integerLiteral
+  | CharacterLiteral     # characterLiteral
+  | StringLiteral        # stringLiteral
+  | value=(TRUE | FALSE) # booleanLiteral
+  | 'NULL'               # nullLiteral
+  | 'SELF'               # selfLiteral
   ;
 
 Identifier
